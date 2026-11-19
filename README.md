@@ -1,9 +1,8 @@
 # ACTADOC — Intelligence documentaire (OCR · NLP · RAG)
 
-Plateforme d'analyse de documents immobiliers et juridiques français : ingestion d'un PDF hétérogène, extraction d'information structurée, classification avec score de confiance calibré, détection d'anomalies, interrogation du corpus en langage naturel avec citation systématique des sources.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Projet phare** du portfolio — absorbe le périmètre RAG initialement prévu en [02-rag-agent-ai-engineer](../02-rag-agent-ai-engineer/).
-**Fenêtre d'exécution :** 11 août → 5 octobre 2026 (8 semaines, ~100 h).
+Plateforme d'analyse de documents immobiliers et juridiques français : ingestion d'un PDF hétérogène, extraction d'information structurée, classification avec score de confiance calibré, détection d'anomalies, interrogation du corpus en langage naturel avec citation systématique des sources.
 
 ---
 
@@ -83,7 +82,7 @@ docker/  scripts/  tests/  docs/
 | 7 | 22–28 sept. | Génération fiable | **Conformité schéma, abstention hors corpus, coût/latence/confidentialité par fournisseur** |
 | 8 | 29 sept.–5 oct. | Anomalies + industrialisation | **Précision/rappel sur docs altérés, latence bout-en-bout** |
 
-Détail complet dans le plan de montée en compétence. Avancement dans [JOURNAL.md](JOURNAL.md), résultats dans [METRICS.md](METRICS.md).
+Résultats dans [METRICS.md](METRICS.md).
 
 **Règle :** une semaine sans chiffre mesuré est une semaine perdue. Une case vide de `METRICS.md` n'est jamais comblée par une estimation.
 
@@ -102,3 +101,15 @@ Tenues à jour publiquement dans [LIMITATIONS.md](LIMITATIONS.md) — ce qui ne 
 Non revendiqué et non couvert par ce projet : fine-tuning de LLM (LoRA/QLoRA), mise en production à l'échelle sous charge réelle, expertise métier notariale ou juridique, agents autonomes, multilingue.
 
 **Vérification de licence requise** avant tout usage revendiqué des modèles de compréhension documentaire type LayoutLM / Donut : plusieurs sont diffusés sous licence non commerciale.
+
+## Documentation
+
+La documentation technique est dans [docs/](docs/).
+
+## Contribuer
+
+Les contributions sont les bienvenues : voir [CONTRIBUTING.md](CONTRIBUTING.md), le [code de conduite](CODE_OF_CONDUCT.md) et la [politique de sécurité](SECURITY.md). L'historique des versions est dans [CHANGELOG.md](CHANGELOG.md).
+
+## Licence
+
+Distribué sous licence [MIT](LICENSE).
