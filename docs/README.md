@@ -5,9 +5,11 @@ This folder documents how ACTADOC is built and operated. It is written for contr
 | Page | Content |
 |---|---|
 | [architecture.md](architecture.md) | Purpose, processing chain, components, repository layout, data and confidentiality |
+| [generation.md](generation.md) | Synthetic corpus generation: usage, ground-truth format, design |
+| [adr/](adr/README.md) | Architecture Decision Records: why each significant design choice was made |
 | [ci-cd.md](ci-cd.md) | Pre-commit, CI and release workflows |
 
-One page per block is added as it is implemented (generation, ingestion, classification, extraction, retrieval, LLM, anomalies, API).
+One page per block is added as it is implemented (ingestion, classification, extraction, retrieval, LLM, anomalies, API).
 
 ## Status convention
 

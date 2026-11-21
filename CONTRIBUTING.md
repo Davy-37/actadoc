@@ -78,6 +78,12 @@ Branch names are short, lowercase, hyphenated, and say what the branch contains:
 - **Package layout**: implementation lives in internal modules prefixed with `_` (e.g. `actadoc/<subpackage>/_module.py`). The public API is exposed by each subpackage's `__init__.py`. Users import `from actadoc.<subpackage> import <name>`, never from a `_` module.
 - Do not commit data, model weights, or secrets. Configuration goes through environment variables (`.env`, never committed).
 
+### Design and architecture
+
+- Follow the [architecture principles](docs/architecture.md#architecture-principles): separation of concerns, pure core with input/output at the edge, extension through new classes and registries rather than `if/elif`, validated immutable data at boundaries.
+- Use a design pattern only when it removes a concrete risk or duplication, and say which one in the pull request.
+- Record any significant design decision as an [Architecture Decision Record](docs/adr/README.md): context, alternatives considered, decision, consequences.
+
 ### Docstrings (required)
 
 Every public module, class, function and method has a [NumPy-style docstring](https://numpydoc.readthedocs.io/en/latest/format.html). Ruff enforces it (`D` rules, `numpy` convention).
