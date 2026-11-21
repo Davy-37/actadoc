@@ -1,6 +1,6 @@
 # Architecture
 
-Status: **planned**. Package skeleton in place; blocks are implemented one by one.
+Status: **in progress**. `actadoc.generation` is implemented for leases (see [generation.md](generation.md)); the other blocks are planned.
 
 ## Purpose
 
@@ -38,6 +38,21 @@ Optional dependency groups in `pyproject.toml` match these blocks (`generation`,
 ### Design choice: pgvector rather than a dedicated vector database
 
 At this volume, one persistence system is enough: PostgreSQL 16 with the pgvector extension and an HNSW index avoids running and securing a second database.
+
+## Architecture principles
+
+These principles apply to every block. Significant decisions are recorded as [ADRs](adr/README.md).
+
+| Principle | In practice |
+|---|---|
+| **Separation of concerns** | One module, one responsibility (schema, building, formatting, input/output) |
+| **Pure core, input/output at the edge** | Business logic returns objects in memory; disk, network, databases and the command line stay in thin outer modules (`_io.py`, `scripts/`, `api/`) |
+| **Dependencies point inward** | Outer layers (scripts, API) import the core; the core never imports them |
+| **Open for extension, closed for modification** | New document types, OCR engines or LLM providers are added as new classes behind a common interface and a registry, not as new `if/elif` branches |
+| **Program to an interface** | Callers depend on an abstract base class (`DocumentGenerator`), not on a concrete one |
+| **Validate at the boundaries** | Data entering or leaving a block is a validated, immutable Pydantic model |
+| **Public API in `__init__.py`** | Implementation in `_` modules; users import from the subpackage only |
+| **Patterns only when they remove a real risk** | Each pattern used is justified in an ADR, with the simpler alternative it replaces |
 
 ## Repository layout
 
