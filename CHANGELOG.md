@@ -13,3 +13,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI workflow: mandatory issue link on pull requests, pre-commit checks, tests on Ubuntu and macOS with Python 3.11 and 3.12.
 - Release workflow: build, wheel smoke test and PyPI Trusted Publishing on GitHub Release.
 - Technical documentation in `docs/`.
+- First test checking that the package version is a valid semantic version, so that CI passes (#1).
