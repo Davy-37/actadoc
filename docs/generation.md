@@ -99,7 +99,7 @@ Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md).
 1. Create `_sale_agreement.py` with a class deriving from `DocumentGenerator`, decorated with `@register_generator(DocumentType.SALE_AGREEMENT)`.
 2. Implement `_compose(builder, fake, rng)` using `builder.text(...)` and `builder.entity(...)` in reading order.
 3. Import the module in `actadoc/generation/__init__.py` so that it registers itself.
-4. Add tests: reproducibility, expected roles, business rules.
+4. Add tests in `tests/generation/test_<type>.py`: reproducibility, expected roles, business rules.
 
 No existing code changes: the registry finds the new generator.
 

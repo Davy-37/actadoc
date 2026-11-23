@@ -67,6 +67,7 @@ Branch names are short, lowercase, hyphenated, and say what the branch contains:
 | `feature/` | new functionality | `feature/scene-split` |
 | `fix/` | bug fix | `fix/empty-manifest` |
 | `docs/` | documentation only | `docs/api-reference` |
+| `refactor/` | restructuring with no change in behavior (code or tests) | `refactor/tests-per-block` |
 | `experiment/` | exploratory work, not meant to be merged as is | `experiment/onnx-export` |
 
 ## 4. Write the change
@@ -118,7 +119,19 @@ If your change modifies behavior, the public API, the pipeline or the deployment
 
 ### Tests
 
-- Tests use `pytest` and live in `tests/`, in files named `test_*.py`.
+- Tests use `pytest`, in files named `test_*.py`.
+- `tests/` mirrors the package: **one sub-folder per block**, named like the sub-package it tests. Package-level tests stay at the root of `tests/`.
+
+  ```
+  tests/
+    test_package.py        package metadata
+    generation/            tests of src/actadoc/generation/
+      test_schema.py
+      test_lease.py
+    extraction/            tests of src/actadoc/extraction/
+  ```
+
+- Inside a block folder, files are named after the module they test, without the block prefix (`generation/test_schema.py`, not `test_generation_schema.py`). Pytest runs in `importlib` mode, so two blocks can each have a `test_schema.py`.
 - Cover **normal cases**, **edge cases** (empty input, boundaries, invalid values) and **expected exceptions** (`pytest.raises`).
 - Use `@pytest.mark.parametrize` instead of copying the same test.
 - **Every bug fix comes with a regression test** that fails before the fix and passes after.
