@@ -135,6 +135,7 @@ Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year giv
 - **Why HTML then PDF**: the layout is CSS, easy to change without touching generators; WeasyPrint handles French typography, accents and page breaks. Alternatives: ReportLab (layout coded in Python, more control, more code), LaTeX (excellent output, heavy system dependency), LibreOffice from `.docx` (realistic, slow and hard to run in CI).
 - WeasyPrint is imported only inside `render_pdf`: the rest of `actadoc.generation` works without it.
 
+## Design
 
 | Module | Role |
 |---|---|
