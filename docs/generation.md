@@ -1,6 +1,6 @@
 # Synthetic corpus generation
 
-Status: **implemented** for residential leases (text and ground truth). **Planned**: sale agreements, energy performance certificates, PDF rendering, scan degradation (sub-issues of #2).
+Status: **implemented** for the 3 document types (leases, sale agreements, energy performance certificates): text, ground truth and PDF rendering. **Planned**: scan degradation (sub-issue of #2).
 
 ## Purpose
 
@@ -12,14 +12,17 @@ Every ACTADOC block (OCR, classification, extraction, retrieval) is evaluated on
 
 ```bash
 pip install -e ".[generation]"
-python scripts/generate_corpus.py --type lease --n 200 --seed 42
+python scripts/generate_corpus.py --type lease --n 200 --seed 42 --pdf
 ```
+
+`--pdf` needs WeasyPrint and the Pango system library (`apt install libpango-1.0-0 libpangoft2-1.0-0` on Debian/Ubuntu, `brew install pango` on macOS).
 
 Output, in `data/synthetic/lease/` (ignored by Git):
 
 ```
 lease-00000.txt     document text
 lease-00000.json    ground truth
+lease-00000.pdf     A4 rendering (with --pdf)
 lease-00001.txt
 ...
 ```
@@ -27,13 +30,14 @@ lease-00001.txt
 ### Python
 
 ```python
-from actadoc.generation import DocumentType, generate_documents, write_corpus
+from actadoc.generation import DocumentType, generate_documents, render_pdf, write_corpus
 
 docs = generate_documents(DocumentType.LEASE, n=200, seed=42)
 doc = docs[0]
 doc.text                        # full text of the lease
 doc.ground_truth.entities[0]    # Entity(label='party', role='landlord', value=..., start=..., end=...)
 write_corpus(docs, "data/synthetic/lease")
+render_pdf(doc, "data/synthetic/lease/lease-00000.pdf")
 ```
 
 ## Ground-truth format (schema version 1.0)
@@ -123,7 +127,14 @@ The stated class always matches the stated values, so that the anomaly block (#1
 
 Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year give class D; costs `720,00 €` (offsets 531–539) to `1 090,00 €` (543–553).
 
-## Design
+## PDF rendering
+
+`to_html(text)` lays the text out as an HTML page: first line as the title, lines in capital letters as section headings, other lines as paragraphs, everything escaped. `render_pdf(document, path)` renders that page to an A4 PDF with WeasyPrint.
+
+- **The ground truth stays the text.** Offsets refer to `doc.text`, not to positions in the PDF. Tests read every PDF back with pypdf and check that each entity value is found (whitespace normalized), for the 3 document types. The OCR block (#3) is evaluated by comparing its output with `doc.text`.
+- **Why HTML then PDF**: the layout is CSS, easy to change without touching generators; WeasyPrint handles French typography, accents and page breaks. Alternatives: ReportLab (layout coded in Python, more control, more code), LaTeX (excellent output, heavy system dependency), LibreOffice from `.docx` (realistic, slow and hard to run in CI).
+- WeasyPrint is imported only inside `render_pdf`: the rest of `actadoc.generation` works without it.
+
 
 | Module | Role |
 |---|---|
@@ -135,7 +146,8 @@ Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year giv
 | `_sale_agreement.py` | `SaleAgreementGenerator`, the sale agreement template |
 | `_energy_classes.py` | `energy_class`: DPE class from the 2021 double threshold, pure function reusable by the anomaly block |
 | `_energy_certificate.py` | `EnergyCertificateGenerator`, the DPE template |
-| `_io.py` | `write_corpus`: the only module that touches the disk |
+| `_render.py` | `to_html` (pure) and `render_pdf` (writes the PDF) |
+| `_io.py` | `write_corpus`: writes text and ground truth |
 
 Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md).
 
@@ -152,4 +164,5 @@ No existing code changes: the registry finds the new generator. Checked with the
 
 - Each document gets its own seed, derived from `(document type, corpus seed, index)`. Document `k` is identical whatever `n` is, and can be regenerated alone.
 - Dates are drawn from a fixed range, not from today's date.
+- **PDF bytes**: embedded font subsets carry a timestamp. With `SOURCE_DATE_EPOCH` set (the script sets it to `0`), the same document gives identical bytes on the same machine. Fonts come from the system, so PDFs differ between machines (layout, glyphs); the text and the ground truth do not.
 - **Limit**: Faker's output can change between versions. Faker is pinned to `>=40.0,<41.0`; the same seed is only guaranteed to give the same corpus with the same Faker version.
