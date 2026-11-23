@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- README: outdated week-by-week schedule replaced by the list of blocks and target metrics; progress now tracked in issues and milestones (#14).
+
 ### Added
 
 - Open source governance: MIT license, contributing guide, code of conduct, security policy, issue templates (bug, feature, documentation) and pull request template.

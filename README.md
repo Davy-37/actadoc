@@ -69,22 +69,22 @@ docker/  scripts/  tests/  docs/
 
 ---
 
-## Phases
+## Blocs et métriques visées
 
-| Sem. | Période | Objectif | Métrique produite |
-|---|---|---|---|
-| 1 | 11–17 août | Corpus synthétique dégradé | Distribution des entités, taux de dégradation |
-| 2 | 18–24 août | PDF → texte fiable | **CER / WER avant et après prétraitement** |
-| 3 | 25–31 août | Classification 3 classes | Exactitude TF-IDF vs CamemBERT, F1 macro, coût |
-| 4 | 1–7 sept. | NER + confiance calibrée | **F1 par entité, ECE avant/après, erreur à 90 % de couverture** |
-| 5 | 8–14 sept. | Recherche vectorielle | **Recall@5, MRR, latence par stratégie de chunking** |
-| 6 | 15–21 sept. | Reranking + citations | **Gain Recall/MRR du reranking, surcoût latence** |
-| 7 | 22–28 sept. | Génération fiable | **Conformité schéma, abstention hors corpus, coût/latence/confidentialité par fournisseur** |
-| 8 | 29 sept.–5 oct. | Anomalies + industrialisation | **Précision/rappel sur docs altérés, latence bout-en-bout** |
+| Bloc | Objectif | Métrique visée |
+|---|---|---|
+| Génération | Corpus synthétique dégradé | Distribution des entités, taux de dégradation |
+| Ingestion | PDF → texte fiable | **CER / WER avant et après prétraitement** |
+| Classification | 3 classes de documents | Exactitude TF-IDF vs CamemBERT, F1 macro, coût |
+| Extraction | NER + confiance calibrée | **F1 par entité, ECE avant/après, erreur à 90 % de couverture** |
+| Recherche | Recherche vectorielle | **Recall@5, MRR, latence par stratégie de chunking** |
+| Reranking | Reranking + citations | **Gain Recall/MRR du reranking, surcoût latence** |
+| Génération de réponses | Sorties LLM fiables | **Conformité schéma, abstention hors corpus, coût/latence/confidentialité par fournisseur** |
+| Anomalies et API | Anomalies + industrialisation | **Précision/rappel sur docs altérés, latence bout-en-bout** |
 
-Résultats dans [METRICS.md](METRICS.md).
+Avancement : [issues](https://github.com/Davy-37/actadoc/issues) et [milestones](https://github.com/Davy-37/actadoc/milestones). Résultats : [METRICS.md](METRICS.md).
 
-**Règle :** une semaine sans chiffre mesuré est une semaine perdue. Une case vide de `METRICS.md` n'est jamais comblée par une estimation.
+**Règle :** un bloc sans chiffre mesuré n'est pas terminé. Une case vide de `METRICS.md` n'est jamais comblée par une estimation.
 
 ---
 
