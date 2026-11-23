@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Corpus statistics: `entity_counts`, `word_counts`, `energy_class_counts`, `operation_rates`, `count_pages`, and `scripts/corpus_stats.py`; measured composition of the 600-document corpus in `METRICS.md` (#28).
 - Scan simulation: degradations (rotation, noise, blur, JPEG, lighting, stamp, fold) at levels `clean`, `light`, `medium`, `heavy`; image-only scanned PDFs with a replayable `ScanRecord`; `--scan` and `--dpi` options in `scripts/generate_corpus.py` (#26).
 - PDF rendering of generated documents: `to_html` and `render_pdf` (WeasyPrint, A4), reproducible bytes with `SOURCE_DATE_EPOCH`; `--pdf` option in `scripts/generate_corpus.py` (#24).
 - Synthetic energy performance certificates (`EnergyCertificateGenerator`) with ground truth: owner, diagnostician, living area, annual cost range, issue and expiry dates; `energy_class` implementing the 2021 DPE double threshold (#22).
