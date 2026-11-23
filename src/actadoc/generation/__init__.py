@@ -6,7 +6,7 @@ text and a validated :class:`GroundTruth`. New document types subclass
 """
 
 # Importing the concrete generators registers them.
-from actadoc.generation import _lease, _sale_agreement  # noqa: F401
+from actadoc.generation import _energy_certificate, _lease, _sale_agreement  # noqa: F401
 from actadoc.generation._base import (
     DocumentGenerator,
     document_seed,
@@ -15,6 +15,8 @@ from actadoc.generation._base import (
     register_generator,
 )
 from actadoc.generation._builder import DocumentBuilder, GeneratedDocument
+from actadoc.generation._energy_certificate import EnergyCertificateGenerator
+from actadoc.generation._energy_classes import ENERGY_CLASSES, energy_class
 from actadoc.generation._io import write_corpus
 from actadoc.generation._lease import LeaseGenerator
 from actadoc.generation._sale_agreement import SaleAgreementGenerator
@@ -27,10 +29,12 @@ from actadoc.generation._schema import (
 )
 
 __all__ = [
+    "ENERGY_CLASSES",
     "SCHEMA_VERSION",
     "DocumentBuilder",
     "DocumentGenerator",
     "DocumentType",
+    "EnergyCertificateGenerator",
     "Entity",
     "EntityType",
     "GeneratedDocument",
@@ -38,6 +42,7 @@ __all__ = [
     "LeaseGenerator",
     "SaleAgreementGenerator",
     "document_seed",
+    "energy_class",
     "generate_documents",
     "get_generator",
     "register_generator",
