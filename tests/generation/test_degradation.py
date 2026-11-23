@@ -6,8 +6,10 @@ import pytest
 from actadoc.generation._degradation import (
     add_noise,
     blur,
+    fold,
     jpeg_compress,
     rotate,
+    stamp,
     uneven_lighting,
 )
 
@@ -108,3 +110,48 @@ def test_negative_noise_is_rejected(page, rng):
 def test_non_grayscale_uint8_image_is_rejected(image):
     with pytest.raises(ValueError, match="2-D uint8"):
         rotate(image, 1)
+
+
+def test_stamp_adds_ink_around_its_centre(page):
+    stamped = stamp(page, centre=(75, 50), radius=30, text="COPIE", intensity=0.7)
+    assert stamped.shape == page.shape and stamped.dtype == np.uint8
+    assert stamped[50, 45] < 255  # on the outer ring (75 - 30, 50)
+    assert stamped[190, 140] == 255  # far from the stamp
+
+
+def test_stamp_is_blended_not_opaque(page):
+    stamped = stamp(page, centre=(75, 100), radius=40, text="COPIE", intensity=0.5)
+    assert stamped.min() >= 0 and (stamped[(stamped > 0) & (stamped < 255)] >= 127).all()
+
+
+def test_zero_intensity_stamp_is_identity(page):
+    assert np.array_equal(stamp(page, (75, 100), 30, "COPIE", 0), page)
+
+
+@pytest.mark.parametrize(
+    ("radius", "text", "intensity", "match"),
+    [(0, "COPIE", 0.5, "radius"), (30, "ENREGISTRÉ", 0.5, "ASCII"), (30, "COPIE", 2, "intensity")],
+)
+def test_invalid_stamp_is_rejected(page, radius, text, intensity, match):
+    with pytest.raises(ValueError, match=match):
+        stamp(page, (75, 100), radius, text, intensity)
+
+
+def test_fold_darkens_a_horizontal_band(page):
+    folded = fold(page, position=1 / 3, darkness=0.3, width=5)
+    row = round((page.shape[0] - 1) / 3)
+    assert folded[row, 0] == pytest.approx(255 * 0.7, abs=1)
+    assert folded[0, 0] == 255 and folded[-1, 0] == 255
+
+
+def test_zero_darkness_fold_is_identity(page):
+    assert np.array_equal(fold(page, 0.5, 0, 5), page)
+
+
+@pytest.mark.parametrize(
+    ("position", "darkness", "width", "match"),
+    [(1.2, 0.3, 5, "position"), (0.5, -0.1, 5, "darkness"), (0.5, 0.3, 0, "width")],
+)
+def test_invalid_fold_is_rejected(page, position, darkness, width, match):
+    with pytest.raises(ValueError, match=match):
+        fold(page, position, darkness, width)

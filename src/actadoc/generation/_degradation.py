@@ -165,3 +165,86 @@ def uneven_lighting(image: Image, strength: float, direction: float) -> Image:
     position = (position - position.min()) / max(float(np.ptp(position)), 1.0)
     factor = 1.0 - strength * position
     return np.clip(image * factor, 0, WHITE).astype(np.uint8)
+
+
+def stamp(image: Image, centre: tuple[int, int], radius: int, text: str, intensity: float) -> Image:
+    """Print a round ink stamp with a word in it.
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+        Grayscale page, ``uint8``.
+    centre : tuple of int
+        Centre of the stamp, ``(x, y)`` in pixels.
+    radius : int
+        Radius of the stamp in pixels, ``>= 1``.
+    text : str
+        Word printed in the stamp, ASCII only (OpenCV fonts have no accents).
+    intensity : float
+        Ink darkness, from 0 (invisible) to 1 (black).
+
+    Returns
+    -------
+    numpy.ndarray
+        Stamped page. The stamp is blended, so text underneath stays visible.
+
+    Raises
+    ------
+    ValueError
+        If ``image`` is not a 2-D ``uint8`` array, ``radius`` is not positive,
+        ``text`` is not ASCII or ``intensity`` is outside 0-1.
+    """
+    _check(image)
+    if radius < 1:
+        raise ValueError(f"radius must be positive, got {radius}")
+    if not text.isascii():
+        raise ValueError(f"text must be ASCII, got {text!r}")
+    if not 0 <= intensity <= 1:
+        raise ValueError(f"intensity must be between 0 and 1, got {intensity}")
+    ink = np.zeros(image.shape, dtype=np.uint8)
+    thickness = max(2, radius // 12)
+    cv2.circle(ink, centre, radius, 1, thickness)
+    cv2.circle(ink, centre, int(radius * 0.8), 1, max(1, thickness // 2))
+    scale = radius / 60
+    (text_width, text_height), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, scale, thickness)
+    origin = (centre[0] - text_width // 2, centre[1] + text_height // 2)
+    cv2.putText(ink, text, origin, cv2.FONT_HERSHEY_DUPLEX, scale, 1, thickness)
+    return (image * (1.0 - intensity * ink)).astype(np.uint8)
+
+
+def fold(image: Image, position: float, darkness: float, width: int) -> Image:
+    """Add the shadow of a horizontal fold, as on a letter folded in three.
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+        Grayscale page, ``uint8``.
+    position : float
+        Height of the fold as a fraction of the page height, from 0 (top) to 1 (bottom).
+    darkness : float
+        Darkening at the centre of the fold, from 0 (none) to 1 (black).
+    width : int
+        Half-width of the shadow in pixels, ``>= 1``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Page with a fold shadow.
+
+    Raises
+    ------
+    ValueError
+        If ``image`` is not a 2-D ``uint8`` array, ``position`` or ``darkness``
+        is outside 0-1, or ``width`` is not positive.
+    """
+    _check(image)
+    if not 0 <= position <= 1:
+        raise ValueError(f"position must be between 0 and 1, got {position}")
+    if not 0 <= darkness <= 1:
+        raise ValueError(f"darkness must be between 0 and 1, got {darkness}")
+    if width < 1:
+        raise ValueError(f"width must be positive, got {width}")
+    rows = np.arange(image.shape[0])
+    centre = position * (image.shape[0] - 1)
+    shadow = darkness * np.exp(-(((rows - centre) / width) ** 2))
+    return (image * (1.0 - shadow)[:, np.newaxis]).astype(np.uint8)
