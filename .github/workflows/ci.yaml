@@ -50,6 +50,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+      # WeasyPrint (PDF rendering) needs Pango from the system
+      - name: Install system libraries (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0
+      - name: Install system libraries (macOS)
+        if: runner.os == 'macOS'
+        run: brew install pango
       - name: Install project
         run: pip install -e ".[dev,generation]"
       - name: Type check
