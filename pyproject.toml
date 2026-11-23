@@ -68,6 +68,11 @@ convention = "numpy"
 # test functions are documented by their name; module docstrings stay required
 "tests/**" = ["D100", "D101", "D102", "D103", "D104"]
 
+# Third-party libraries without type hints
+[[tool.mypy.overrides]]
+module = ["weasyprint"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
 # docstring examples are executed: a wrong example fails the test suite
