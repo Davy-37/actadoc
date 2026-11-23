@@ -51,6 +51,28 @@ def rasterize_pdf(path: Path, dpi: int) -> list[Image]:
         document.close()
 
 
+def count_pages(path: Path) -> int:
+    """Return the number of pages of a PDF.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        PDF to read.
+
+    Returns
+    -------
+    int
+        Number of pages.
+    """
+    import pypdfium2 as pdfium
+
+    document = pdfium.PdfDocument(Path(path))
+    try:
+        return len(document)
+    finally:
+        document.close()
+
+
 def scan_pdf(
     pdf_path: Path,
     out_path: Path,

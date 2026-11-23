@@ -8,6 +8,7 @@ from actadoc.generation import (
     DocumentType,
     ScanLevel,
     ScanRecord,
+    count_pages,
     generate_documents,
     rasterize_pdf,
     render_pdf,
@@ -86,3 +87,7 @@ def test_heavy_scan_is_further_from_the_original_than_a_clean_one(rendered, tmp_
 def test_unknown_level_is_rejected(rendered, tmp_path):
     with pytest.raises(ValueError):
         scan(rendered, tmp_path / "x.scan.pdf", level="extreme")
+
+
+def test_count_pages(rendered):
+    assert count_pages(rendered) == len(PdfReader(rendered).pages) >= 1

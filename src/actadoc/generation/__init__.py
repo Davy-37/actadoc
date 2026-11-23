@@ -30,7 +30,7 @@ from actadoc.generation._scan import (
     apply_operations,
     sample_operations,
 )
-from actadoc.generation._scanner import rasterize_pdf, scan_pdf
+from actadoc.generation._scanner import count_pages, rasterize_pdf, scan_pdf
 from actadoc.generation._schema import (
     SCHEMA_VERSION,
     DocumentType,
@@ -69,6 +69,7 @@ __all__ = [
     "ScanRecord",
     "Summary",
     "apply_operations",
+    "count_pages",
     "document_seed",
     "energy_class",
     "energy_class_counts",
