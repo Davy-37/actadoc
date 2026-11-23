@@ -1,6 +1,6 @@
 # Architecture
 
-Status: **in progress**. `actadoc.generation` is implemented for the 3 document types (leases, sale agreements, energy certificates), as text (see [generation.md](generation.md)); the other blocks are planned.
+Status: **in progress**. `actadoc.generation` is implemented for the 3 document types (leases, sale agreements, energy certificates), as text and PDF (see [generation.md](generation.md)); the other blocks are planned.
 
 ## Purpose
 
