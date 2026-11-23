@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-generation = ["faker>=40.0,<41.0", "weasyprint>=62.0,<71.0", "opencv-python>=4.10", "pillow>=10.3"]
+generation = ["faker>=40.0,<41.0", "weasyprint>=62.0,<71.0", "opencv-python>=4.10", "pillow>=10.3", "pypdfium2>=4.30,<6.0"]
 ingestion = ["pdfplumber>=0.11", "pymupdf>=1.24", "python-doctr[torch]>=0.8", "pytesseract>=0.3.10"]
 nlp = ["torch>=2.3", "transformers>=4.41", "scikit-learn>=1.5", "spacy>=3.7", "mlflow>=2.13"]
 rag = ["sentence-transformers>=3.0", "psycopg[binary]>=3.1", "pgvector>=0.2.5", "llama-index>=0.10"]
@@ -70,7 +70,7 @@ convention = "numpy"
 
 # Third-party libraries without type hints
 [[tool.mypy.overrides]]
-module = ["weasyprint"]
+module = ["pypdfium2", "weasyprint"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
