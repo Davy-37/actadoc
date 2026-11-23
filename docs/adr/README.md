@@ -5,5 +5,6 @@ An ADR records one significant design decision: its context, the options conside
 | ADR | Title | Status |
 |---|---|---|
 | [0001](0001-synthetic-document-generation.md) | Design of the synthetic document generator | Accepted |
+| [0002](0002-scan-simulation.md) | Design of the scan simulation | Accepted |
 
 Template: copy an existing ADR and keep the sections *Context*, *Decision*, *Alternatives considered*, *Consequences*.

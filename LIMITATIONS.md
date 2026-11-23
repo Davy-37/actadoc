@@ -20,7 +20,9 @@ _(à remplir au fil des semaines)_
 - **Distribution des classes DPE non réaliste** : consommation et émissions sont tirées uniformément, d'où environ 48 % de classes F et G sur 200 documents, contre environ 17 % dans le parc français. Le corpus teste l'extraction, pas des statistiques sur le parc.
 - **Classe, consommation et émissions du DPE non étiquetées** : elles ne font pas partie des 6 types d'entités ; elles servent aux contrôles de cohérence (anomalies), pas à l'extraction.
 - **Coûts annuels du DPE simplifiés** : un prix unique de 0,12 € par kWh d'énergie primaire, sans distinguer les énergies (électricité, gaz, fioul).
-- **PDF propres, sans dégradation pour l'instant** : mise en page unique et sobre, sans tableaux, logos ni signatures ; la dégradation façon scan est à venir (#2). Les documents réels sont visuellement plus variés.
+- **Mise en page unique et sobre** : pas de tableaux, logos, signatures manuscrites ni annexes. Les documents réels sont visuellement plus variés.
+- **Scans simulés simples** : une seule couche de gris (pas de couleur, donc un tampon rouge devient gris), tampons dessinés avec une police OpenCV sans accents, plis rectilignes, pas de taches, de pages coupées ni d'agrafes. Le réalisme doit être vérifié sur le corpus réel (#6) ; l'écart d'OCR synthétique/réel sera mesuré dans METRICS.md.
+- **Niveaux de dégradation définis par le projet** : `light`, `medium`, `heavy` sont des réglages choisis à la main, pas une norme ; ils servent à comparer des résultats entre eux, pas à prédire la qualité d'un scan réel.
 - **Octets des PDF reproductibles sur une même machine seulement** : les polices viennent du système, donc deux machines produisent des PDF différents (mise en page, glyphes). Le texte et la vérité terrain, eux, sont identiques.
 
 ## Hors périmètre — non revendiqué
