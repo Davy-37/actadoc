@@ -1,6 +1,6 @@
 # Architecture
 
-Status: **in progress**. `actadoc.generation` is implemented for leases (see [generation.md](generation.md)); the other blocks are planned.
+Status: **in progress**. `actadoc.generation` is implemented for leases and sale agreements, as text (see [generation.md](generation.md)); the other blocks are planned.
 
 ## Purpose
 

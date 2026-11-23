@@ -81,6 +81,25 @@ Model: standard unfurnished lease (law n° 89-462 of 6 July 1989). Entities, in 
 | `termination` | termination_clause | one of 2 wordings (six-week notice after a payment order) |
 | `signature_date` | date | between 1 January 2024 and mid-2026 |
 
+## Sale agreements
+
+Model: *compromis de vente* for a flat in a co-ownership building. Entities, in reading order:
+
+| Role | Type | Generation rule |
+|---|---|---|
+| `seller`, `buyer` | party | Faker `fr_FR` names, always different |
+| `cadastral_reference` | cadastral_reference | section of 1 or 2 letters, parcel 1 to 9999; displayed `section AB n° 123`, normalized `AB0123` (section padded to 2 characters, parcel to 4 digits) |
+| `living_area` | surface | Carrez area, 15.0 to 149.9 m² |
+| `price` | amount | 80 000 to 900 000 €, rounded to 1 000 € |
+| `deposit` | amount | 5 % to 10 % of the price (usual range) |
+| `loan_contingency` | termination_clause | one of 2 wordings of the loan *condition suspensive* |
+| `deed_deadline` | date | 60 to 120 days after signature |
+| `signature_date` | date | between 1 January 2024 and mid-2026 |
+
+Example (`seed=42`, first document): `section LG n° 4794` at offsets 343–361, normalized `LG4794`; price `508 000,00 €` at 530–542; deposit `30 480,00 €` (6 %).
+
+**Labelling choice.** The loan contingency is a *condition suspensive*: if the loan is refused, the sale never takes effect. A *clause résolutoire* ends a contract that already exists. Both are labelled `termination_clause` because they answer the same business question (which clause makes the contract fall?) and a 7th entity type would change the schema and the extraction block. The distinction is listed in [LIMITATIONS.md](../LIMITATIONS.md).
+
 ## Design
 
 | Module | Role |
@@ -88,20 +107,21 @@ Model: standard unfurnished lease (law n° 89-462 of 6 July 1989). Entities, in 
 | `_schema.py` | Ground-truth data model (Pydantic, immutable) |
 | `_builder.py` | `DocumentBuilder`: assembles text and computes offsets (Builder pattern) |
 | `_base.py` | `DocumentGenerator` skeleton (Template Method), registry and factory, seeding, `generate_documents` |
-| `_formats.py` | French formatting of amounts, dates and surfaces, shared by all document types |
+| `_formats.py` | French formatting of amounts, dates, surfaces and cadastral references, shared by all document types |
 | `_lease.py` | `LeaseGenerator`, the lease template |
+| `_sale_agreement.py` | `SaleAgreementGenerator`, the sale agreement template |
 | `_io.py` | `write_corpus`: the only module that touches the disk |
 
 Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md).
 
 ### Adding a document type
 
-1. Create `_sale_agreement.py` with a class deriving from `DocumentGenerator`, decorated with `@register_generator(DocumentType.SALE_AGREEMENT)`.
+1. Create `_energy_certificate.py` with a class deriving from `DocumentGenerator`, decorated with `@register_generator(DocumentType.ENERGY_CERTIFICATE)`.
 2. Implement `_compose(builder, fake, rng)` using `builder.text(...)` and `builder.entity(...)` in reading order.
 3. Import the module in `actadoc/generation/__init__.py` so that it registers itself.
 4. Add tests in `tests/generation/test_<type>.py`: reproducibility, expected roles, business rules.
 
-No existing code changes: the registry finds the new generator.
+No existing code changes: the registry finds the new generator. Checked with the sale agreement (#18): `_base.py`, `_builder.py`, `_schema.py` and `_lease.py` were not modified; only a formatter was added to `_formats.py`.
 
 ## Reproducibility
 

@@ -15,7 +15,9 @@ _(à remplir au fil des semaines)_
 
 ## Simplifications assumées
 
-_(à remplir au fil des semaines)_
+- **Condition suspensive étiquetée `termination_clause`** : dans les compromis de vente, la condition suspensive de prêt (la vente ne naît pas si le prêt est refusé) partage l'étiquette des clauses résolutoires (fin d'un contrat existant). Le modèle ne distingue donc pas ces deux mécanismes juridiques.
+- **Compromis de vente limités aux appartements en copropriété** : la surface Carrez n'est obligatoire que pour les lots de copropriété ; les maisons, sans surface Carrez, ne sont pas générées.
+- **Documents en texte seul pour l'instant** : rendu PDF et dégradation de scan à venir (#2).
 
 ## Hors périmètre — non revendiqué
 

@@ -1,11 +1,16 @@
-"""French formatting of amounts, dates and surfaces."""
+"""French formatting of amounts, dates, surfaces and cadastral references."""
 
 from datetime import date
 from decimal import Decimal
 
 import pytest
 
-from actadoc.generation._formats import format_amount, format_date, format_surface
+from actadoc.generation._formats import (
+    format_amount,
+    format_cadastral_reference,
+    format_date,
+    format_surface,
+)
 
 
 @pytest.mark.parametrize(
@@ -56,3 +61,28 @@ def test_format_surface(surface, displayed, normalized):
 def test_non_positive_surface_is_rejected(surface):
     with pytest.raises(ValueError):
         format_surface(surface)
+
+
+@pytest.mark.parametrize(
+    ("section", "number", "displayed", "normalized"),
+    [
+        ("AB", 123, "section AB n° 123", "AB0123"),
+        ("C", 7, "section C n° 7", "0C0007"),
+        ("ZZ", 9999, "section ZZ n° 9999", "ZZ9999"),
+        ("A", 1, "section A n° 1", "0A0001"),
+    ],
+)
+def test_format_cadastral_reference(section, number, displayed, normalized):
+    assert format_cadastral_reference(section, number) == (displayed, normalized)
+
+
+@pytest.mark.parametrize("section", ["", "ABC", "ab", "A1", "É"])
+def test_invalid_cadastral_section_is_rejected(section):
+    with pytest.raises(ValueError, match="section"):
+        format_cadastral_reference(section, 1)
+
+
+@pytest.mark.parametrize("number", [0, -1, 10000])
+def test_invalid_parcel_number_is_rejected(number):
+    with pytest.raises(ValueError, match="parcel number"):
+        format_cadastral_reference("AB", number)

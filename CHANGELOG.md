@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Synthetic sale agreements (`SaleAgreementGenerator`) with ground truth: parties, cadastral reference, Carrez area, price, deposit, loan contingency, deed deadline and signature date; `format_cadastral_reference` formatter (#18).
 - Open source governance: MIT license, contributing guide, code of conduct, security policy, issue templates (bug, feature, documentation) and pull request template.
 - Quality tooling: pre-commit (Black, Ruff with NumPy docstring rules), coverage configuration, Makefile.
 - CI workflow: mandatory issue link on pull requests, pre-commit checks, tests on Ubuntu and macOS with Python 3.11 and 3.12.
