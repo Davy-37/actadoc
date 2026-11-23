@@ -101,3 +101,42 @@ def format_surface(square_metres: Decimal) -> tuple[str, str]:
         raise ValueError(f"surface must be positive, got {square_metres}")
     normalized = square_metres.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
     return f"{normalized}".replace(".", ",") + " m²", str(normalized)
+
+
+def format_cadastral_reference(section: str, number: int) -> tuple[str, str]:
+    """Format a cadastral reference the way French deeds write it.
+
+    Parameters
+    ----------
+    section : str
+        Cadastral section, one or two uppercase letters (``"AB"``).
+    number : int
+        Parcel number within the section, from 1 to 9999.
+
+    Returns
+    -------
+    tuple of str
+        Displayed form (``"section AB n° 123"``) and normalized form
+        (``"AB0123"``): section padded to 2 characters with ``"0"`` and parcel
+        number padded to 4 digits, as in the land register identifiers.
+
+    Raises
+    ------
+    ValueError
+        If ``section`` is not one or two uppercase ASCII letters, or ``number``
+        is outside 1 to 9999.
+
+    Examples
+    --------
+    >>> format_cadastral_reference("AB", 123)
+    ('section AB n° 123', 'AB0123')
+    >>> format_cadastral_reference("C", 7)
+    ('section C n° 7', '0C0007')
+    """
+    if not (
+        1 <= len(section) <= 2 and section.isascii() and section.isalpha() and section.isupper()
+    ):
+        raise ValueError(f"section must be one or two uppercase letters, got {section!r}")
+    if not 1 <= number <= 9999:
+        raise ValueError(f"parcel number must be between 1 and 9999, got {number}")
+    return f"section {section} n° {number}", f"{section:0>2}{number:04d}"

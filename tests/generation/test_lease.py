@@ -123,9 +123,12 @@ def test_document_type_can_be_given_as_string():
     assert isinstance(get_generator("lease"), LeaseGenerator)
 
 
-def test_unregistered_document_type_is_rejected():
+def test_unregistered_document_type_is_rejected(monkeypatch):
+    from actadoc.generation import _base
+
+    monkeypatch.delitem(_base._REGISTRY, DocumentType.LEASE)
     with pytest.raises(ValueError, match="no generator"):
-        get_generator(DocumentType.SALE_AGREEMENT)
+        get_generator(DocumentType.LEASE)
 
 
 def test_registering_a_type_twice_is_rejected():
