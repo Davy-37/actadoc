@@ -61,7 +61,7 @@ src/actadoc/       library (public API in each __init__.py, internals in _*.py)
 evaluation/        evaluation sets: RAG questions, hallucination checks, altered documents
 scripts/           entry points (corpus generation, evaluation runs)
 docker/            container configuration
-tests/             pytest suite
+tests/             pytest suite, one sub-folder per block (tests/generation/, …)
 docs/              technical documentation (this folder)
 data/              never versioned: raw/, synthetic/, real/
 ```

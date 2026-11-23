@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - README: outdated week-by-week schedule replaced by the list of blocks and target metrics; progress now tracked in issues and milestones (#14).
+- Tests: one sub-folder per block in `tests/`, mirroring the package (`tests/generation/`); pytest runs in `importlib` import mode (#16).
 
 ### Added
 

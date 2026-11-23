@@ -70,7 +70,8 @@ convention = "numpy"
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
 # docstring examples are executed: a wrong example fails the test suite
-addopts = "--doctest-modules"
+# importlib mode: two blocks may each have a test_schema.py without a name clash
+addopts = "--doctest-modules --import-mode=importlib"
 pythonpath = ["src", "."]
 
 [tool.coverage.run]
