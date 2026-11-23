@@ -202,7 +202,7 @@ All checks must pass before merging. If a job fails, open it, read the failed st
 
 ### Review
 
-At least one maintainer approval is required. Reviewers comment, approve, or request changes. Answer every comment, push new commits to the same branch, and do not open a new pull request for the same change.
+A maintainer reviews every pull request before merging. Reviewers comment, approve, or request changes. Answer every comment, push new commits to the same branch, and do not open a new pull request for the same change.
 
 ### Merge
 
