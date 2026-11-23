@@ -166,6 +166,16 @@ Bad: `update`, `fix`, `changes`, `final version`.
 
 One commit is one logical change. Stage only the related files (`git add <files>`), not everything.
 
+Prefer **several small commits** to one large commit. Each commit does one thing, can be read on its own, and passes pre-commit and the tests. For example, adding a document generator:
+
+1. `feat(generation): add format_cadastral_reference` (formatter and its tests)
+2. `feat(generation): add SaleAgreementGenerator` (generator and its tests)
+3. `feat(generation): export SaleAgreementGenerator`
+4. `docs(generation): document sale agreements`
+5. `docs(changelog): add sale agreements`
+
+Small commits make the review easier, and let you revert one step or find a regression with `git bisect` on the branch. Pull requests are squash-merged, so `main` still gets one commit per pull request.
+
 pre-commit runs Black and Ruff on every commit. If a hook modifies a file, review the change, `git add` it again and commit again.
 
 ## 6. Open a pull request
