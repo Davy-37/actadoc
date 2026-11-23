@@ -1,6 +1,6 @@
 # Synthetic corpus generation
 
-Status: **implemented** for the 3 document types (leases, sale agreements, energy performance certificates): text, ground truth and PDF rendering. **Planned**: scan degradation (sub-issue of #2).
+Status: **implemented** for the 3 document types (leases, sale agreements, energy performance certificates): text, ground truth, PDF rendering and scan simulation.
 
 ## Purpose
 
@@ -13,6 +13,7 @@ Every ACTADOC block (OCR, classification, extraction, retrieval) is evaluated on
 ```bash
 pip install -e ".[generation]"
 python scripts/generate_corpus.py --type lease --n 200 --seed 42 --pdf
+python scripts/generate_corpus.py --type lease --n 200 --seed 42 --scan medium   # implies --pdf
 ```
 
 `--pdf` needs WeasyPrint and the Pango system library (`apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` on Debian/Ubuntu, `brew install pango` on macOS, then `export DYLD_FALLBACK_LIBRARY_PATH=$(brew --prefix)/lib` if WeasyPrint cannot find `libgobject`).
@@ -22,7 +23,9 @@ Output, in `data/synthetic/lease/` (ignored by Git):
 ```
 lease-00000.txt     document text
 lease-00000.json    ground truth
-lease-00000.pdf     A4 rendering (with --pdf)
+lease-00000.pdf     A4 rendering (with --pdf or --scan)
+lease-00000.scan.pdf   scanned, image-only PDF (with --scan)
+lease-00000.scan.json  scan record: level, seed, resolution, operations per page
 lease-00001.txt
 ...
 ```
@@ -135,6 +138,46 @@ Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year giv
 - **Why HTML then PDF**: the layout is CSS, easy to change without touching generators; WeasyPrint handles French typography, accents and page breaks. Alternatives: ReportLab (layout coded in Python, more control, more code), LaTeX (excellent output, heavy system dependency), LibreOffice from `.docx` (realistic, slow and hard to run in CI).
 - WeasyPrint is imported only inside `render_pdf`: the rest of `actadoc.generation` works without it.
 
+## Scan simulation
+
+`scan_pdf(pdf_path, out_path, doc_id, level, seed, dpi=200)` turns a rendered PDF into what a scanner would produce: pages rasterized in grayscale (pypdfium2), degraded, and saved as an **image-only PDF** (no text layer), with a record next to it.
+
+| Level | Rotation | Noise σ | Blur kernel | JPEG quality | Lighting | Stamp | Fold |
+|---|---|---|---|---|---|---|---|
+| `clean` | – | – | – | – | – | – | – |
+| `light` | ±0.5° | 2–5 | – | 80–95 | ≤ 10 % | – | – |
+| `medium` | ±1.5° | 5–10 | 1 or 3 | 55–80 | ≤ 25 % | 1 page in 2 | 1 page in 2 |
+| `heavy` | ±3° | 10–18 | 3 or 5 | 30–55 | ≤ 40 % | every page | every page |
+
+Operations are applied in the order a real scan goes through: geometry (rotation), marks on the paper (fold, stamp), optics (lighting, blur), then sensor noise and compression. Every page is also stored as JPEG at quality 95 inside the PDF, as a scanner does: `clean` means no simulated damage, not a lossless page. Measured on a lease at 100 dpi, the mean gap per pixel with the rendered page is 0.2 (clean), 13 (light), 31 (medium) and 35 (heavy) gray levels.
+
+**The ground truth does not change.** It describes the text; the OCR block (#3) is evaluated by comparing its output with `doc.text`, per level.
+
+### Scan record
+
+Real record of `lease-00000` (corpus seed 42) at level `heavy`, 200 dpi, shortened to 4 of its 7 operations:
+
+```json
+{
+  "doc_id": "lease-00000",
+  "level": "heavy",
+  "seed": 1882777570,
+  "dpi": 200,
+  "pages": [[
+    {"name": "rotate", "angle": -0.894},
+    {"name": "stamp", "centre": [723, 849], "radius": 181, "text": "COPIE", "intensity": 0.557},
+    {"name": "noise", "sigma": 17.18, "seed": 243831923},
+    {"name": "jpeg", "quality": 44}
+  ]],
+  "container_quality": 95,
+  "schema_version": "1.0"
+}
+```
+
+Each operation is a typed model chosen by its `name` (Pydantic discriminated union): its parameters are validated when the record is read back, and `apply_operations(page, record.pages[0])` replays the same page exactly. The noise operation stores the seed of its own generator for that purpose.
+
+Design choices and alternatives: [ADR 0002](adr/0002-scan-simulation.md).
+
 ## Design
 
 | Module | Role |
@@ -148,9 +191,12 @@ Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year giv
 | `_energy_classes.py` | `energy_class`: DPE class from the 2021 double threshold, pure function reusable by the anomaly block |
 | `_energy_certificate.py` | `EnergyCertificateGenerator`, the DPE template |
 | `_render.py` | `to_html` (pure) and `render_pdf` (writes the PDF) |
+| `_degradation.py` | Image operations (rotate, noise, blur, JPEG, lighting, stamp, fold): pure functions on `uint8` pages |
+| `_scan.py` | Levels and profiles, typed operation records, `sample_operations` and `apply_operations` |
+| `_scanner.py` | `rasterize_pdf` and `scan_pdf`: reads and writes PDFs |
 | `_io.py` | `write_corpus`: writes text and ground truth |
 
-Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md).
+Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md) (generators), [ADR 0002](adr/0002-scan-simulation.md) (scan simulation).
 
 ### Adding a document type
 
@@ -166,4 +212,5 @@ No existing code changes: the registry finds the new generator. Checked with the
 - Each document gets its own seed, derived from `(document type, corpus seed, index)`. Document `k` is identical whatever `n` is, and can be regenerated alone.
 - Dates are drawn from a fixed range, not from today's date.
 - **PDF bytes**: embedded font subsets carry a timestamp. With `SOURCE_DATE_EPOCH` set (the script sets it to `0`), the same document gives identical bytes on the same machine. Fonts come from the system, so PDFs differ between machines (layout, glyphs); the text and the ground truth do not.
+- **Scanned PDFs**: the same rendered PDF, level, seed and resolution give identical bytes (dates in the PDF are fixed). The script uses the document seed for the degradations, so one corpus seed regenerates text, PDFs and scans.
 - **Limit**: Faker's output can change between versions. Faker is pinned to `>=40.0,<41.0`; the same seed is only guaranteed to give the same corpus with the same Faker version.
