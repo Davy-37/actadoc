@@ -178,6 +178,16 @@ Each operation is a typed model chosen by its `name` (Pydantic discriminated uni
 
 Design choices and alternatives: [ADR 0002](adr/0002-scan-simulation.md).
 
+## Corpus statistics
+
+```bash
+python scripts/corpus_stats.py --n 200 --seed 42
+```
+
+Generates the corpus, renders it to PDF in a temporary folder to count pages, and prints Markdown tables: documents (words, pages, entities), entities per type, DPE classes, and the share of scanned pages that get each degradation per level. The measured figures are in [METRICS.md](../METRICS.md); rerun the script whenever a generator changes.
+
+The degradation rates are drawn exactly as `scan_pdf` draws them (one generator per document, one draw per page), without rasterizing: which operations a page gets does not depend on its size.
+
 ## Design
 
 | Module | Role |
@@ -193,8 +203,9 @@ Design choices and alternatives: [ADR 0002](adr/0002-scan-simulation.md).
 | `_render.py` | `to_html` (pure) and `render_pdf` (writes the PDF) |
 | `_degradation.py` | Image operations (rotate, noise, blur, JPEG, lighting, stamp, fold): pure functions on `uint8` pages |
 | `_scan.py` | Levels and profiles, typed operation records, `sample_operations` and `apply_operations` |
-| `_scanner.py` | `rasterize_pdf` and `scan_pdf`: reads and writes PDFs |
+| `_scanner.py` | `rasterize_pdf`, `count_pages` and `scan_pdf`: reads and writes PDFs |
 | `_io.py` | `write_corpus`: writes text and ground truth |
+| `_stats.py` | Corpus statistics: entities, words, DPE classes, degradation rates |
 
 Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md) (generators), [ADR 0002](adr/0002-scan-simulation.md) (scan simulation).
 

@@ -30,7 +30,7 @@ from actadoc.generation._scan import (
     apply_operations,
     sample_operations,
 )
-from actadoc.generation._scanner import rasterize_pdf, scan_pdf
+from actadoc.generation._scanner import count_pages, rasterize_pdf, scan_pdf
 from actadoc.generation._schema import (
     SCHEMA_VERSION,
     DocumentType,
@@ -38,9 +38,19 @@ from actadoc.generation._schema import (
     EntityType,
     GroundTruth,
 )
+from actadoc.generation._stats import (
+    OPERATION_NAMES,
+    Summary,
+    energy_class_counts,
+    entity_counts,
+    operation_rates,
+    summarize,
+    word_counts,
+)
 
 __all__ = [
     "ENERGY_CLASSES",
+    "OPERATION_NAMES",
     "PROFILES",
     "SCAN_SCHEMA_VERSION",
     "SCHEMA_VERSION",
@@ -57,16 +67,23 @@ __all__ = [
     "ScanLevel",
     "ScanProfile",
     "ScanRecord",
+    "Summary",
     "apply_operations",
+    "count_pages",
     "document_seed",
     "energy_class",
+    "energy_class_counts",
+    "entity_counts",
     "generate_documents",
     "get_generator",
+    "operation_rates",
     "rasterize_pdf",
     "register_generator",
     "render_pdf",
     "sample_operations",
     "scan_pdf",
+    "summarize",
     "to_html",
+    "word_counts",
     "write_corpus",
 ]
