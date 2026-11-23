@@ -19,6 +19,7 @@ from actadoc.generation._energy_certificate import EnergyCertificateGenerator
 from actadoc.generation._energy_classes import ENERGY_CLASSES, energy_class
 from actadoc.generation._io import write_corpus
 from actadoc.generation._lease import LeaseGenerator
+from actadoc.generation._render import render_pdf, to_html
 from actadoc.generation._sale_agreement import SaleAgreementGenerator
 from actadoc.generation._schema import (
     SCHEMA_VERSION,
@@ -46,5 +47,7 @@ __all__ = [
     "generate_documents",
     "get_generator",
     "register_generator",
+    "render_pdf",
+    "to_html",
     "write_corpus",
 ]

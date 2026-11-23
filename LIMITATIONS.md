@@ -20,7 +20,8 @@ _(à remplir au fil des semaines)_
 - **Distribution des classes DPE non réaliste** : consommation et émissions sont tirées uniformément, d'où environ 48 % de classes F et G sur 200 documents, contre environ 17 % dans le parc français. Le corpus teste l'extraction, pas des statistiques sur le parc.
 - **Classe, consommation et émissions du DPE non étiquetées** : elles ne font pas partie des 6 types d'entités ; elles servent aux contrôles de cohérence (anomalies), pas à l'extraction.
 - **Coûts annuels du DPE simplifiés** : un prix unique de 0,12 € par kWh d'énergie primaire, sans distinguer les énergies (électricité, gaz, fioul).
-- **Documents en texte seul pour l'instant** : rendu PDF et dégradation de scan à venir (#2).
+- **PDF propres, sans dégradation pour l'instant** : mise en page unique et sobre, sans tableaux, logos ni signatures ; la dégradation façon scan est à venir (#2). Les documents réels sont visuellement plus variés.
+- **Octets des PDF reproductibles sur une même machine seulement** : les polices viennent du système, donc deux machines produisent des PDF différents (mise en page, glyphes). Le texte et la vérité terrain, eux, sont identiques.
 
 ## Hors périmètre — non revendiqué
 

@@ -18,7 +18,7 @@ Triggered on pull requests to `main` and on pushes to `main`.
 |---|---|
 | `issue-link` | Fails if the PR description has no closing keyword (`Closes #N`, `Fixes #N`, `Resolves #N`) |
 | `quality` | Runs all pre-commit hooks |
-| `tests` | mypy + pytest with branch coverage, matrix **Ubuntu / macOS × Python 3.11 / 3.12** (4 jobs) |
+| `tests` | installs Pango (needed by WeasyPrint), then mypy + pytest with branch coverage, matrix **Ubuntu / macOS × Python 3.11 / 3.12** (4 jobs) |
 
 ## Release: `release.yml`
 
