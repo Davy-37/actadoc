@@ -38,9 +38,19 @@ from actadoc.generation._schema import (
     EntityType,
     GroundTruth,
 )
+from actadoc.generation._stats import (
+    OPERATION_NAMES,
+    Summary,
+    energy_class_counts,
+    entity_counts,
+    operation_rates,
+    summarize,
+    word_counts,
+)
 
 __all__ = [
     "ENERGY_CLASSES",
+    "OPERATION_NAMES",
     "PROFILES",
     "SCAN_SCHEMA_VERSION",
     "SCHEMA_VERSION",
@@ -57,16 +67,22 @@ __all__ = [
     "ScanLevel",
     "ScanProfile",
     "ScanRecord",
+    "Summary",
     "apply_operations",
     "document_seed",
     "energy_class",
+    "energy_class_counts",
+    "entity_counts",
     "generate_documents",
     "get_generator",
+    "operation_rates",
     "rasterize_pdf",
     "register_generator",
     "render_pdf",
     "sample_operations",
     "scan_pdf",
+    "summarize",
     "to_html",
+    "word_counts",
     "write_corpus",
 ]
