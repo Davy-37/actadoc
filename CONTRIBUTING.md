@@ -166,6 +166,16 @@ Bad: `update`, `fix`, `changes`, `final version`.
 
 One commit is one logical change. Stage only the related files (`git add <files>`), not everything.
 
+Prefer **several small commits** to one large commit. Each commit does one thing, can be read on its own, and passes pre-commit and the tests. For example, adding a document generator:
+
+1. `feat(generation): add format_cadastral_reference` (formatter and its tests)
+2. `feat(generation): add SaleAgreementGenerator` (generator and its tests)
+3. `feat(generation): export SaleAgreementGenerator`
+4. `docs(generation): document sale agreements`
+5. `docs(changelog): add sale agreements`
+
+Small commits make the review easier, and let you revert one step or find a regression with `git bisect` on the branch. Pull requests are squash-merged, so `main` still gets one commit per pull request.
+
 pre-commit runs Black and Ruff on every commit. If a hook modifies a file, review the change, `git add` it again and commit again.
 
 ## 6. Open a pull request
@@ -192,7 +202,7 @@ All checks must pass before merging. If a job fails, open it, read the failed st
 
 ### Review
 
-At least one maintainer approval is required. Reviewers comment, approve, or request changes. Answer every comment, push new commits to the same branch, and do not open a new pull request for the same change.
+A maintainer reviews every pull request before merging. Reviewers comment, approve, or request changes. Answer every comment, push new commits to the same branch, and do not open a new pull request for the same change.
 
 ### Merge
 

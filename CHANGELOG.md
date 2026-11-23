@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - README: outdated week-by-week schedule replaced by the list of blocks and target metrics; progress now tracked in issues and milestones (#14).
 - Tests: one sub-folder per block in `tests/`, mirroring the package (`tests/generation/`); pytest runs in `importlib` import mode (#16).
+- Contributing guide: several small commits per pull request; branch protection documented as configured (0 required approvals while there is a single maintainer) (#20).
 
 ### Added
 

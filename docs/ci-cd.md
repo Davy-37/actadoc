@@ -33,7 +33,8 @@ PyPI setup (once): add a trusted publisher (pending publisher for the first rele
 
 ## Repository settings (maintainers)
 
-- Branch protection on `main`: pull request required, 1 approval, required status checks (`issue-link`, `quality`, the 4 `tests` jobs), no direct push.
+- Branch protection on `main`: pull request required, required status checks (`issue-link`, `quality`, the 4 `tests` jobs), conversations resolved, linear history, no direct push and no force push, rules applied to administrators too.
+- Required approvals: **0 while the project has a single maintainer** (GitHub does not let authors approve their own pull request), who reviews every diff before merging. Raised to 1 when a second maintainer joins.
 - Merge method: **squash merge** only; delete branches after merge.
 - Labels: `bug`, `enhancement`, `documentation`, `good first issue`, `help wanted`.
 - Milestones group issues by release (e.g. `v0.2.0`).
