@@ -100,6 +100,29 @@ Example (`seed=42`, first document): `section LG n° 4794` at offsets 343–361,
 
 **Labelling choice.** The loan contingency is a *condition suspensive*: if the loan is refused, the sale never takes effect. A *clause résolutoire* ends a contract that already exists. Both are labelled `termination_clause` because they answer the same business question (which clause makes the contract fall?) and a 7th entity type would change the schema and the extraction block. The distinction is listed in [LIMITATIONS.md](../LIMITATIONS.md).
 
+## Energy performance certificates
+
+Model: DPE (*diagnostic de performance énergétique*) of a dwelling, 2021 method. Entities, in reading order:
+
+| Role | Type | Generation rule |
+|---|---|---|
+| `owner`, `diagnostician` | party | Faker `fr_FR` names, always different; the diagnostician's company is in the text, not labelled |
+| `living_area` | surface | 15.0 to 149.9 m² |
+| `annual_cost_min`, `annual_cost_max` | amount | ±20 % around consumption × area × 0.12 €/kWh, rounded to 10 € |
+| `issue_date` | date | between 1 January 2024 and mid-2026 |
+| `expiry_date` | date | 10 years after the issue date (29 February becomes 28 February) |
+
+Primary energy (50 to 550 kWh/m²/year), emissions and the energy class are written in the text but **not labelled**: they are not one of the 6 entity types. The class is computed by `energy_class`, from the 2021 double threshold: the worse of the primary energy class and the emissions class.
+
+| Class | A | B | C | D | E | F | G |
+|---|---|---|---|---|---|---|---|
+| Primary energy (kWh/m²/year) | < 70 | < 110 | < 180 | < 250 | < 330 | < 420 | ≥ 420 |
+| Emissions (kg CO2/m²/year) | < 6 | < 11 | < 30 | < 50 | < 70 | < 100 | ≥ 100 |
+
+The stated class always matches the stated values, so that the anomaly block (#10) can later alter one of them and check that the inconsistency is detected.
+
+Example (`seed=42`, first document): 194 kWh/m²/year and 37 kg CO2/m²/year give class D; costs `720,00 €` (offsets 531–539) to `1 090,00 €` (543–553).
+
 ## Design
 
 | Module | Role |
@@ -110,18 +133,20 @@ Example (`seed=42`, first document): `section LG n° 4794` at offsets 343–361,
 | `_formats.py` | French formatting of amounts, dates, surfaces and cadastral references, shared by all document types |
 | `_lease.py` | `LeaseGenerator`, the lease template |
 | `_sale_agreement.py` | `SaleAgreementGenerator`, the sale agreement template |
+| `_energy_classes.py` | `energy_class`: DPE class from the 2021 double threshold, pure function reusable by the anomaly block |
+| `_energy_certificate.py` | `EnergyCertificateGenerator`, the DPE template |
 | `_io.py` | `write_corpus`: the only module that touches the disk |
 
 Decisions and trade-offs: [ADR 0001](adr/0001-synthetic-document-generation.md).
 
 ### Adding a document type
 
-1. Create `_energy_certificate.py` with a class deriving from `DocumentGenerator`, decorated with `@register_generator(DocumentType.ENERGY_CERTIFICATE)`.
+1. Add the type to `DocumentType`, then create `_<type>.py` with a class deriving from `DocumentGenerator`, decorated with `@register_generator(DocumentType.<TYPE>)`.
 2. Implement `_compose(builder, fake, rng)` using `builder.text(...)` and `builder.entity(...)` in reading order.
 3. Import the module in `actadoc/generation/__init__.py` so that it registers itself.
 4. Add tests in `tests/generation/test_<type>.py`: reproducibility, expected roles, business rules.
 
-No existing code changes: the registry finds the new generator. Checked with the sale agreement (#18): `_base.py`, `_builder.py`, `_schema.py` and `_lease.py` were not modified; only a formatter was added to `_formats.py`.
+No existing code changes: the registry finds the new generator. Checked with the sale agreement (#18) and the energy certificate (#22): `_base.py`, `_builder.py`, `_schema.py` and the existing generators were not modified.
 
 ## Reproducibility
 
