@@ -15,7 +15,7 @@ pip install -e ".[generation]"
 python scripts/generate_corpus.py --type lease --n 200 --seed 42 --pdf
 ```
 
-`--pdf` needs WeasyPrint and the Pango system library (`apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` on Debian/Ubuntu, `brew install pango` on macOS).
+`--pdf` needs WeasyPrint and the Pango system library (`apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` on Debian/Ubuntu, `brew install pango` on macOS, then `export DYLD_FALLBACK_LIBRARY_PATH=$(brew --prefix)/lib` if WeasyPrint cannot find `libgobject`).
 
 Output, in `data/synthetic/lease/` (ignored by Git):
 

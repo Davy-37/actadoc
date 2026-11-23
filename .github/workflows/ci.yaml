@@ -56,7 +56,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0
       - name: Install system libraries (macOS)
         if: runner.os == 'macOS'
-        run: brew install pango
+        # Homebrew libraries are not on the default library path of the runner's Python
+        run: |
+          brew install pango
+          echo "DYLD_FALLBACK_LIBRARY_PATH=$(brew --prefix)/lib" >> "$GITHUB_ENV"
       - name: Install project
         run: pip install -e ".[dev,generation]"
       - name: Type check
