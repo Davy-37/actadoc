@@ -21,6 +21,16 @@ from actadoc.generation._io import write_corpus
 from actadoc.generation._lease import LeaseGenerator
 from actadoc.generation._render import render_pdf, to_html
 from actadoc.generation._sale_agreement import SaleAgreementGenerator
+from actadoc.generation._scan import (
+    PROFILES,
+    SCAN_SCHEMA_VERSION,
+    ScanLevel,
+    ScanProfile,
+    ScanRecord,
+    apply_operations,
+    sample_operations,
+)
+from actadoc.generation._scanner import rasterize_pdf, scan_pdf
 from actadoc.generation._schema import (
     SCHEMA_VERSION,
     DocumentType,
@@ -31,6 +41,8 @@ from actadoc.generation._schema import (
 
 __all__ = [
     "ENERGY_CLASSES",
+    "PROFILES",
+    "SCAN_SCHEMA_VERSION",
     "SCHEMA_VERSION",
     "DocumentBuilder",
     "DocumentGenerator",
@@ -42,12 +54,19 @@ __all__ = [
     "GroundTruth",
     "LeaseGenerator",
     "SaleAgreementGenerator",
+    "ScanLevel",
+    "ScanProfile",
+    "ScanRecord",
+    "apply_operations",
     "document_seed",
     "energy_class",
     "generate_documents",
     "get_generator",
+    "rasterize_pdf",
     "register_generator",
     "render_pdf",
+    "sample_operations",
+    "scan_pdf",
     "to_html",
     "write_corpus",
 ]

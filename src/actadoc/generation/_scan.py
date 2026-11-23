@@ -191,6 +191,9 @@ class ScanRecord(BaseModel):
         Operations applied to each page, in order. Each operation is one of
         :class:`Rotate`, :class:`Fold`, :class:`Stamp`, :class:`Lighting`,
         :class:`Blur`, :class:`Noise`, :class:`Jpeg`, told apart by ``name``.
+    container_quality : int, default=95
+        JPEG quality of the pages inside the scanned PDF, as set on a scanner.
+        Even the ``clean`` level goes through this compression.
     schema_version : str, default=SCAN_SCHEMA_VERSION
         Version of this record format.
     """
@@ -202,6 +205,7 @@ class ScanRecord(BaseModel):
     seed: int
     dpi: int
     pages: list[list[Operation]]
+    container_quality: int = Field(default=95, ge=1, le=100)
     schema_version: str = SCAN_SCHEMA_VERSION
 
 
