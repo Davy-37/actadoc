@@ -19,6 +19,25 @@ def test_pdf_option_also_renders_pdfs(tmp_path, monkeypatch):
     assert pdf.read_bytes().startswith(b"%PDF-")
 
 
+def test_scan_option_renders_and_scans(tmp_path, monkeypatch):
+    monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
+    args = ["--type", "lease", "--n", "1", "--out", str(tmp_path), "--scan", "light", "--dpi", "50"]
+    main(args)
+    names = sorted(p.name for p in (tmp_path / "lease").iterdir())
+    assert names == [
+        "lease-00000.json",
+        "lease-00000.pdf",
+        "lease-00000.scan.json",
+        "lease-00000.scan.pdf",
+        "lease-00000.txt",
+    ]
+
+
+def test_unknown_scan_level_is_rejected(tmp_path):
+    with pytest.raises(SystemExit):
+        main(["--out", str(tmp_path), "--scan", "extreme"])
+
+
 def test_unknown_type_is_rejected(tmp_path):
     with pytest.raises(SystemExit):
         main(["--type", "invoice", "--out", str(tmp_path)])
