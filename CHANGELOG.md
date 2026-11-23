@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Synthetic energy performance certificates (`EnergyCertificateGenerator`) with ground truth: owner, diagnostician, living area, annual cost range, issue and expiry dates; `energy_class` implementing the 2021 DPE double threshold (#22).
 - Synthetic sale agreements (`SaleAgreementGenerator`) with ground truth: parties, cadastral reference, Carrez area, price, deposit, loan contingency, deed deadline and signature date; `format_cadastral_reference` formatter (#18).
 - Open source governance: MIT license, contributing guide, code of conduct, security policy, issue templates (bug, feature, documentation) and pull request template.
 - Quality tooling: pre-commit (Black, Ruff with NumPy docstring rules), coverage configuration, Makefile.
