@@ -16,7 +16,7 @@ Plateforme d'analyse de documents immobiliers et juridiques français : ingestio
 | Volume | 200 documents synthétiques + 50 réels annotés |
 | Hors périmètre | Signature électronique · Multilingue · Fine-tuning de LLM · Agents autonomes · UI élaborée |
 
-Tout élargissement est reporté après le 5 octobre. Un retard se rattrape en réduisant le périmètre de la semaine concernée, jamais en doublant la charge de la suivante.
+Toute extension du périmètre passe par une issue.
 
 ---
 
@@ -24,9 +24,9 @@ Tout élargissement est reporté après le 5 octobre. Un retard se rattrape en r
 
 Le corpus est **généré synthétiquement à étiquettes natives** : gabarits dérivés de modèles publics (service-public.fr, Judilibre, Légifrance, open data ADEME, DVF), remplissage Faker en localisation `fr_FR`, rendu PDF, puis dégradation délibérée pour simuler la numérisation (rotation faible angle, bruit gaussien, compression JPEG, variation d'éclairage, tampons, pliures).
 
-La valeur insérée *est* la valeur à extraire : annotation parfaite, coût nul, régénération reproductible à graine fixée.
+Chaque valeur insérée est enregistrée avec sa position dans le texte : la vérité terrain est exacte, et le corpus se régénère à l'identique à partir d'une seed.
 
-**Contrainte méthodologique.** L'écart de performance entre corpus synthétique et corpus réel est mesuré et publié dans [METRICS.md](METRICS.md), jamais dissimulé.
+L'écart de performance entre corpus synthétique et corpus réel sera mesuré et publié dans [METRICS.md](METRICS.md).
 
 ---
 
@@ -84,7 +84,7 @@ docker/  scripts/  tests/  docs/
 
 Avancement : [issues](https://github.com/Davy-37/actadoc/issues) et [milestones](https://github.com/Davy-37/actadoc/milestones). Résultats : [METRICS.md](METRICS.md).
 
-**Règle :** un bloc sans chiffre mesuré n'est pas terminé. Une case vide de `METRICS.md` n'est jamais comblée par une estimation.
+Un bloc est terminé quand ses métriques sont mesurées et reportées dans `METRICS.md`.
 
 ---
 
