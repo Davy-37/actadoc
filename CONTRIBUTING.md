@@ -135,14 +135,14 @@ If your change modifies behavior, the public API, the pipeline or the deployment
 - Cover **normal cases**, **edge cases** (empty input, boundaries, invalid values) and **expected exceptions** (`pytest.raises`).
 - Use `@pytest.mark.parametrize` instead of copying the same test.
 - **Every bug fix comes with a regression test** that fails before the fix and passes after.
-- Check coverage with `make test` and look at the missing lines. Coverage is a guide, not a target: a meaningful assertion beats a covered line.
+- Check coverage with `make test`: the report lists the lines no test runs. Add tests for the ones that matter, with assertions on the result.
 
 ### Project rules
 
 - **Real documents are never committed, published, logged or sent to an external service.** Only public or anonymized documents are used, and they stay in `data/real/`, which Git ignores.
 - No personal data in code, tests, fixtures, issues or pull requests: use synthetic values generated with Faker (`fr_FR`).
 - The synthetic corpus is reproducible from a seed; the inserted value is the ground truth.
-- The gap between synthetic and real performance is measured and published in `METRICS.md`, never hidden.
+- The gap between synthetic and real performance is measured and published in `METRICS.md`.
 - Calibration and abstention thresholds are chosen on validation data, never on the test set.
 - LLM providers are compared on cost, latency, schema compliance and confidentiality; a provider that sends data outside is not used on real documents (GDPR).
 - Model licenses are checked before use (several document-understanding models are non-commercial).

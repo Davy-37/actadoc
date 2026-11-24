@@ -1,6 +1,6 @@
 # Métriques mesurées
 
-Une case vide n'est jamais comblée par une estimation. Une métrique non mesurée n'existe pas et ne figure sur aucun document de candidature.
+Valeurs mesurées, avec leur date et leur protocole. Une case vide correspond à une métrique pas encore mesurée.
 
 | Bloc | Métrique | Valeur | Date | Protocole |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ Une case vide n'est jamais comblée par une estimation. Une métrique non mesur�
 
 ## Corpus synthétique
 
-Composition du corpus sur lequel les blocs suivants sont évalués. Tableaux produits par le script, jamais saisis à la main : relancer la commande après toute modification d'un générateur.
+Composition du corpus sur lequel les blocs suivants sont évalués. Les tableaux sont produits par `scripts/corpus_stats.py` ; relancer la commande après toute modification d'un générateur.
 
 Measured on 2026-11-24: 200 documents per type, corpus seed 42, Faker 40.63.0. Command: `python scripts/corpus_stats.py --n 200 --seed 42`.
 
@@ -67,7 +67,7 @@ Lecture :
 
 - **Une page par document** : aucun document ne dépasse une page A4. Les actes réels en font souvent plusieurs ; voir [LIMITATIONS.md](LIMITATIONS.md).
 - **Types d'entités déséquilibrés** : les références cadastrales n'existent que dans les compromis de vente (200 occurrences, contre 1 400 montants). Le F1 d'extraction sera donc publié par type d'entité, pas seulement en moyenne.
-- **Classes DPE** : 48 % de F et G, contre environ 17 % dans le parc français ; distribution non réaliste, assumée (le corpus teste l'extraction).
+- **Classes DPE** : 48 % de F et G, contre environ 17 % dans le parc français ; distribution non réaliste, connue (voir LIMITATIONS.md).
 - **Dégradations** : rotation, éclairage, bruit et JPEG touchent toutes les pages dès le niveau `light` (avec des amplitudes croissantes) ; pli, tampon et flou distinguent `medium` (environ une page sur deux) de `heavy` (toutes les pages).
 
 ## Arbitrage fournisseurs LLM
